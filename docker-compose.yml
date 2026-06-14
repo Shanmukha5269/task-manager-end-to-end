@@ -1,0 +1,40 @@
+services:
+  task-manager-frontend:
+    build:
+      context: frontend/.
+    image: task-manager-frontend
+    container_name: task-manager-frontend
+    networks:
+      - task-network
+    ports:
+      - 5500:80
+
+  task-manager-backend:
+    build:
+      context: backend/TaskManager/.
+    image: task-manager-backend
+    container_name: task-manager-backend
+    networks:
+      - task-network
+    ports:
+      - 8088:8088
+    env_file:
+      - backend/TaskManager/.env
+    depends_on:
+      - mysql
+    restart: always
+      
+
+  mysql:
+    image: mysql
+    container_name: task-manager-mysql
+    networks:
+      - task-network
+    ports:
+      - 3307:3306
+    env_file:
+      - .env
+
+networks:
+  task-network:
+    name: task-network
